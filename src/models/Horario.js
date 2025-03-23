@@ -42,13 +42,14 @@ export class HorarioModel {
                     SUM(CASE WHEN p.Parametro_Horario_Tipo = 'Tarde' THEN 1 ELSE 0 END) AS cantidadTarde
                 FROM Horarios h
                 INNER JOIN UsuarioXPeriodos ux ON h.UsuarioXPeriodo_ID = ux.UsuarioXPeriodo_ID
-                INNER JOIN Usuarios u ON ux.Usuario_Cedula = u.Usuario_Cedula
+                INNER JOIN Internal_User u ON ux.Internal_ID = u.Internal_ID
                 INNER JOIN Parametro_Horarios p ON h.${columnaDia} = p.Parametro_Horario_ID
                 WHERE 
                     ux.Periodo_ID = :periodoId
-                    AND u.Usuario_Area = :area
+                    AND u.Internal_Area = :area
                     AND h.Horario_IsDeleted = 0
             `;
+        
 
             const [resultado] = await sequelize.query(query, {
                 replacements: { periodoId, area },
@@ -142,7 +143,7 @@ export class HorarioModel {
     
     static async getHorariosCompletos(periodoId, area) {
         try {
-          const query = `
+            const query = `
             SELECT 
               h.Horario_ID,
               h.UsuarioXPeriodo_ID,
@@ -175,13 +176,13 @@ export class HorarioModel {
               phV.Parametro_Horario_Hora_Salida  AS Viernes_Salida,
               phV.Parametro_Horario_Tipo        AS Viernes_Tipo,
               
-              u.Usuario_Cedula,
-              u.Usuario_Nombres,
-              u.Usuario_Apellidos,
-              u.Usuario_Area
+              u.Internal_ID,
+              u.Internal_Name,
+              u.Internal_LastName,
+              u.Internal_Area
             FROM Horarios h
             INNER JOIN UsuarioXPeriodos ux ON h.UsuarioXPeriodo_ID = ux.UsuarioXPeriodo_ID
-            INNER JOIN Usuarios u ON ux.Usuario_Cedula = u.Usuario_Cedula
+            INNER JOIN Internal_User u ON ux.Internal_ID = u.Internal_ID
             LEFT JOIN Parametro_Horarios phL 
               ON h.Horario_Dia_Lunes = phL.Parametro_Horario_ID AND phL.Parametro_Horario_IsDeleted = false
             LEFT JOIN Parametro_Horarios phM 
@@ -193,10 +194,11 @@ export class HorarioModel {
             LEFT JOIN Parametro_Horarios phV 
               ON h.Horario_Dia_Viernes = phV.Parametro_Horario_ID AND phV.Parametro_Horario_IsDeleted = false
             WHERE ux.Periodo_ID = :periodoId
-              AND u.Usuario_Area = :area
+              AND u.Internal_Area = :area
               AND h.Horario_IsDeleted = false
             ORDER BY h.Horario_ID;
           `;
+          
           
           const horarios = await sequelize.query(query, {
             replacements: { periodoId, area },

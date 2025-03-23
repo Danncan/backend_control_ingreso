@@ -1,4 +1,4 @@
-import { Usuario } from "./Usuario_schema.js";
+import { InternalUser } from "./Internal_User.js";
 import { Periodo } from "./Periodo_schema.js";
 import { UsuarioXPeriodo } from "./UsuarioXPeriodo_schema.js";
 import { Resumen_Horas_Estudiantes } from "./Resumen_Horas_Estudiantes_schema.js";
@@ -7,60 +7,60 @@ import { Seguimiento_Semanal } from "./Seguimiento_Semanal_schema.js";
 import { Horarios } from "./Horario_schema.js";
 import { Registro_Asistencia } from "./Registro_Asistencia.js";
 
-/* 🔹 Relación N:M entre Usuario y Periodo a través de UsuarioXPeriodo */
-Usuario.belongsToMany(Periodo, { 
+/* 🔹 Relación N:M entre InternalUser y Periodo a través de UsuarioXPeriodo */
+InternalUser.belongsToMany(Periodo, { 
     through: UsuarioXPeriodo, 
-    foreignKey: "Usuario_Cedula",
-    as: "periodos"  // 📌 Alias para consultas más claras
+    foreignKey: "Internal_ID",
+    as: "periodos"
 });
 
-Periodo.belongsToMany(Usuario, { 
+Periodo.belongsToMany(InternalUser, { 
     through: UsuarioXPeriodo, 
     foreignKey: "Periodo_ID",
-    as: "usuarios"  // 📌 Alias para consultas más claras
+    as: "usuarios"
 });
 
-/* 🔹 Relación 1:N entre Usuario y UsuarioXPeriodo (para `include` correcto) */
-Usuario.hasMany(UsuarioXPeriodo, { 
-    foreignKey: "Usuario_Cedula",
-    as: "usuarioPeriodos"  // 📌 Alias para hacer consultas desde UsuarioXPeriodo
+/* 🔹 Relación 1:N entre InternalUser y UsuarioXPeriodo */
+InternalUser.hasMany(UsuarioXPeriodo, { 
+    foreignKey: "Internal_ID",
+    as: "usuarioPeriodos"
 });
 
-UsuarioXPeriodo.belongsTo(Usuario, { 
-    foreignKey: "Usuario_Cedula",
-    as: "usuario"  // 📌 Alias para hacer consultas desde UsuarioXPeriodo
+UsuarioXPeriodo.belongsTo(InternalUser, { 
+    foreignKey: "Internal_ID",
+    as: "usuario"
 });
 
-/* 🔹 Relación 1:N entre Periodo y UsuarioXPeriodo (para `include` correcto) */
+/* 🔹 Relación 1:N entre Periodo y UsuarioXPeriodo */
 Periodo.hasMany(UsuarioXPeriodo, { 
     foreignKey: "Periodo_ID",
-    as: "periodoUsuarios"  // 📌 Alias para hacer consultas desde UsuarioXPeriodo
+    as: "periodoUsuarios"
 });
 
 UsuarioXPeriodo.belongsTo(Periodo, { 
     foreignKey: "Periodo_ID",
-    as: "periodo"  // 📌 Alias para hacer consultas desde UsuarioXPeriodo
+    as: "periodo"
 });
 
-/* 🔹 Relación 1:N entre Usuario y Resumen_Horas_Estudiantes */
-Usuario.hasMany(Resumen_Horas_Estudiantes, { 
-    foreignKey: "Usuario_Cedula",
+/* 🔹 Relación 1:N entre InternalUser y Resumen_Horas_Estudiantes */
+InternalUser.hasMany(Resumen_Horas_Estudiantes, { 
+    foreignKey: "Internal_ID",
     as: "resumenHoras"
 });
 
-Resumen_Horas_Estudiantes.belongsTo(Usuario, { 
-    foreignKey: "Usuario_Cedula",
+Resumen_Horas_Estudiantes.belongsTo(InternalUser, { 
+    foreignKey: "Internal_ID",
     as: "usuarioResumen"
 });
 
-/* 🔹 Relación 1:N entre Usuario y Horas_Extraordinarias */
-Usuario.hasMany(Horas_Extraordinarias, { 
-    foreignKey: "Usuario_Cedula",
+/* 🔹 Relación 1:N entre InternalUser y Horas_Extraordinarias */
+InternalUser.hasMany(Horas_Extraordinarias, { 
+    foreignKey: "Internal_ID",
     as: "horasExtraordinarias"
 });
 
-Horas_Extraordinarias.belongsTo(Usuario, { 
-    foreignKey: "Usuario_Cedula",
+Horas_Extraordinarias.belongsTo(InternalUser, { 
+    foreignKey: "Internal_ID",
     as: "usuarioHorasExtra"
 });
 
@@ -103,5 +103,4 @@ Registro_Asistencia.belongsTo(UsuarioXPeriodo, {
     onUpdate: 'CASCADE'
 });
 
-
-console.log("📌 Relaciones de Sequelize establecidas correctamente.");
+console.log("📌 Relaciones de Sequelize con InternalUser establecidas correctamente.");

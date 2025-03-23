@@ -1,28 +1,27 @@
 import app from "./app.js";
 import { sequelize } from "./database/database.js";
+import { PORT } from "./config.js";
 
-import { Usuario } from "./schemas/Usuario_schema.js";
-import { Periodo } from "./schemas/Periodo_schema.js";
-import { UsuarioXPeriodo } from "./schemas/UsuarioXPeriodo_schema.js";
-import { Resumen_Horas_Estudiantes } from "./schemas/Resumen_Horas_Estudiantes_schema.js";
-import { Horas_Extraordinarias } from "./schemas/Horas_Extraordinarias_schema.js";
-import { Seguimiento_Semanal } from "./schemas/Seguimiento_Semanal_schema.js";
-import { Horarios } from "./schemas/Horario_schema.js";
-import { Alerta } from "./schemas/Alerta_schema.js";
-import { Parametro_Horario } from "./schemas/Parametro_Horario_schema.js";
-
-// 🔹 Importa el archivo de asociaciones después de los modelos
-import "./schemas/associations.js";
 
 async function main(){
    try {
-      await sequelize.sync(/*{force: true}*/);
-      app.listen(3000, () => {
-         console.log("Server running on port 3000")
-      })
+      await sequelize.sync({ alter: true }); // Se asegura de que la DB esté actualizada sin perder datos
+      console.log("✅ Base de datos sincronizada correctamente en Supabase");
+
+      app.listen(PORT, () => {
+         console.log(`🚀 Servidor corriendo en el puerto ${PORT}`);
+       }).on('error', (err) => {
+         if (err.code === 'EADDRINUSE') {
+           console.error(`❌ El puerto ${PORT} ya está en uso. Cambia el puerto o cierra el proceso que lo usa.`);
+         } else {
+           console.error("❌ Error al iniciar el servidor:", err);
+         }
+       });
+       
+
    } catch (error) {
-      console.error("Error starting server: ", error)
+      console.error("❌ Error al iniciar el servidor:", error);
    }
 }
 
-main()
+main();

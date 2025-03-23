@@ -1,7 +1,7 @@
 import { DataTypes } from "sequelize";
 import { sequelize } from "../database/database.js";
 
-import { Usuario } from "./Usuario_schema.js";
+import { InternalUser } from "./Internal_User.js";
 import { UsuarioXPeriodo } from "./UsuarioXPeriodo_schema.js";
 /*
 CREATE TABLE Periodos (

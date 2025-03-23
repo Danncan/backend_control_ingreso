@@ -1,3 +1,4 @@
+// models/UsuarioXPeriodo_schema.js
 import { DataTypes } from "sequelize";
 import { sequelize } from "../database/database.js";
 
@@ -11,7 +12,7 @@ export const UsuarioXPeriodo = sequelize.define('UsuarioXPeriodo', {
         type: DataTypes.INTEGER,
         allowNull: false
     },
-    Usuario_Cedula: {
+    Internal_ID: { 
         type: DataTypes.STRING(13),
         allowNull: false
     },
@@ -22,4 +23,3 @@ export const UsuarioXPeriodo = sequelize.define('UsuarioXPeriodo', {
 }, {
     timestamps: false
 });
-

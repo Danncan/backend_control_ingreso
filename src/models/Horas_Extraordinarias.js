@@ -1,7 +1,7 @@
 import { Horas_Extraordinarias } from "../schemas/Horas_Extraordinarias_schema.js";
 
 export class Horas_ExtraordinariasModel {
-
+    
     /** 🔹 Obtener todas las horas extraordinarias activas */
     static async getHoras_Extraordinarias() {
         try {
@@ -13,18 +13,18 @@ export class Horas_ExtraordinariasModel {
         }
     }
 
-    /** 🔹 Obtener una hora extraordinaria por ID, solo si no está eliminada */
+    /** 🔹 Obtener una hora extraordinaria por ID */
     static async getById(id) {
         try {
             return await Horas_Extraordinarias.findOne({
-                where: { Horas_ID: id, Horas_IsDeleted: false } // ✅ Filtro de eliminación lógica
+                where: { Horas_ID: id, Horas_IsDeleted: false }
             });
         } catch (error) {
             throw new Error(`Error al obtener horas extraordinarias: ${error.message}`);
         }
     }
 
-    /** 🔹 Crear un nuevo registro */
+    /** 🔹 Crear nuevo registro */
     static async create(data) {
         try {
             return await Horas_Extraordinarias.create(data);
@@ -33,47 +33,48 @@ export class Horas_ExtraordinariasModel {
         }
     }
 
-    /** 🔹 Actualizar un registro solo si no está eliminado (reutilizando getById) */
+    /** 🔹 Actualizar un registro */
     static async update(id, data) {
         try {
-            const horasExtraordinarias = await this.getById(id); // ✅ Reutiliza getById
+            const horasExtraordinarias = await this.getById(id);
 
-            if (!horasExtraordinarias) return null; // 🔹 Si no existe o está eliminado
+            if (!horasExtraordinarias) return null;
 
             const [rowsUpdated] = await Horas_Extraordinarias.update(data, {
-                where: { Horas_ID: id, Horas_IsDeleted: false } // ✅ Filtro en la actualización
+                where: { Horas_ID: id, Horas_IsDeleted: false }
             });
 
-            if (rowsUpdated === 0) return null; // 🔹 Si no se actualizó nada
-            return await this.getById(id); // ✅ Retorna el registro actualizado
+            if (rowsUpdated === 0) return null;
+
+            return await this.getById(id);
         } catch (error) {
             throw new Error(`Error al actualizar horas extraordinarias: ${error.message}`);
         }
     }
 
-    /** 🔹 Eliminar (marcar como eliminado) solo si no está eliminado (reutilizando getById) */
+    /** 🔹 Eliminar lógico */
     static async delete(id) {
         try {
-            const horasExtraordinarias = await this.getById(id); // ✅ Reutiliza getById
+            const horasExtraordinarias = await this.getById(id);
 
-            if (!horasExtraordinarias) return null; // 🔹 Si no existe o ya está eliminado
+            if (!horasExtraordinarias) return null;
 
             await Horas_Extraordinarias.update(
-                { Horas_IsDeleted: true }, // 🔹 Marcar como eliminado
-                { where: { Horas_ID: id, Horas_IsDeleted: false } } // ✅ Solo si aún no está eliminado
+                { Horas_IsDeleted: true },
+                { where: { Horas_ID: id, Horas_IsDeleted: false } }
             );
 
-            return await Horas_Extraordinarias.findOne({ where: { Horas_ID: id } }); // Retorna el registro actualizado
+            return await Horas_Extraordinarias.findOne({ where: { Horas_ID: id } });
         } catch (error) {
             throw new Error(`Error al eliminar horas extraordinarias: ${error.message}`);
         }
     }
 
-    /** 🔹 Obtener todas las horas extraordinarias de un usuario */
+    /** 🔹 Obtener todas las horas extraordinarias por usuario (Internal_ID) */
     static async getHoras_ExtraordinariasByUser(id) {
         try {
             return await Horas_Extraordinarias.findAll({
-                where: { Usuario_Cedula: id, Horas_IsDeleted: false }
+                where: { Internal_ID: id, Horas_IsDeleted: false }
             });
         } catch (error) {
             throw new Error(`Error al obtener horas extraordinarias por usuario: ${error.message}`);
