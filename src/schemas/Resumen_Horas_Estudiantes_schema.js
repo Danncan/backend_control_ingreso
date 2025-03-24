@@ -21,6 +21,10 @@ export const Resumen_Horas_Estudiantes = sequelize.define('Resumen_Horas_Estudia
         primaryKey: true,
         autoIncrement: true
     },
+    Internal_ID: { 
+        type: DataTypes.STRING(13),
+        allowNull: false
+    },
     Resumen_Inicio: {
         type: DataTypes.DATE,
         allowNull: false

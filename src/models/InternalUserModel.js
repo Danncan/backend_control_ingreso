@@ -215,5 +215,39 @@ export class InternalUserModel {
         }
     }
 
+         /** 🔹 Actualizar la huella del usuario */
+         static async updateHuella(cedula, huellaBase64) {
+            try {
+                const usuario = await this.getById(cedula);
+                if (!usuario) return null; // 🔹 Usuario no encontrado
+    
+                // 🔹 Convertir la huella de Base64 a Buffer (BLOB)
+                const huellaBuffer = Buffer.from(huellaBase64, "base64");
+    
+                // 🔹 Actualizar la huella en la base de datos
+                const [rowsUpdated] = await Usuario.update(
+                    { Usuario_Huella: huellaBuffer },
+                    { where: { Usuario_Cedula: cedula, Usuario_IsDeleted: false } }
+                );
+    
+                if (rowsUpdated === 0) return null; // 🔹 Si no se actualizó nada
+                return await this.getById(cedula); // ✅ Retorna el usuario actualizado
+            } catch (error) {
+                throw new Error(`Error al actualizar huella: ${error.message}`);
+            }
+        }
+    
+        /** 🔹 Obtener la huella de un usuario */
+        static async getHuella(cedula) {
+            try {
+                const usuario = await this.getById(cedula);
+                if (!usuario || !usuario.Usuario_Huella) return null; // 🔹 Si no hay huella
+    
+                // 🔹 Convertir la huella de Buffer a Base64 para enviarla al frontend
+                return usuario.Usuario_Huella.toString("base64");
+            } catch (error) {
+                throw new Error(`Error al obtener la huella: ${error.message}`);
+            }
+        }
 
 }

@@ -20,6 +20,10 @@ export const Registro_Asistencia = sequelize.define('Registro_Asistencia', {
         primaryKey: true,
         autoIncrement: true
     },
+    UsuarioXPeriodo_ID: {
+        type: DataTypes.INTEGER,
+        allowNull: false
+    },
     Registro_Entrada: {
         type: DataTypes.DATE,
         allowNull: true
