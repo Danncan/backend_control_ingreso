@@ -227,7 +227,7 @@ export class InternalUserModel {
                 // 🔹 Actualizar la huella en la base de datos
                 const [rowsUpdated] = await Usuario.update(
                     { Usuario_Huella: huellaBuffer },
-                    { where: { Usuario_Cedula: cedula, Usuario_IsDeleted: false } }
+                    { where: { Internal_ID: cedula, Usuario_IsDeleted: false } }
                 );
     
                 if (rowsUpdated === 0) return null; // 🔹 Si no se actualizó nada
