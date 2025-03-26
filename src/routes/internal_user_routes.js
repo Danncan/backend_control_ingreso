@@ -7,6 +7,7 @@ InternalUserRouter.get('/usuariointerno', InternalUserController.getInternalUser
 InternalUserRouter.get('/usuariointerno/:id', InternalUserController.getById);
 InternalUserRouter.get('/usuariointerno/email/:email', InternalUserController.getByEmail);
 InternalUserRouter.post('/usuariointerno', InternalUserController.createInternalUser);
+InternalUserRouter.post('/usuariointernoBulk', InternalUserController.createInternalUsersBulk);
 InternalUserRouter.put('/usuariointerno/:id', InternalUserController.update);
 InternalUserRouter.delete('/usuariointerno/:id', InternalUserController.delete);
 
